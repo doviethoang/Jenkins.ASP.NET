@@ -26,8 +26,10 @@ pipeline {
 }
 stage('Deploy to IIS'){
    steps{
-      bat 'msdeploy -verb:sync -source:package="NETCICD/NETCICD.zip" -dest:auto -setParam:name="IIS Web Application Name",value="Default Web Site/NETCICD"'
+      bat script:'msdeploy -verb:sync -source:package=NETCICD/NETCICD.zip -dest:auto -setParam:name="IIS Web Application Name",value="Default Web Site/NETCICD"'
      }
     }
      }
 }
+
+
