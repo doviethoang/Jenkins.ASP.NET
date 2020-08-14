@@ -1,0 +1,33 @@
+def myVariable = "foo"
+def msbuild = '"C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MsBuild.exe"'
+def workingspacesln = '"C:/Jenkins/workspace/Jenkins ASP.NET github pipeline/NETCICD/NETCICD.sln"'
+def packagename ='"C:/Jenkins/workspace/Jenkins ASP.NET github pipeline/NETCICD/NETCICD.zip"'
+pipeline {
+    agent { node { label 'win' } }
+
+    stages {
+        stage('Delete working space'){
+            steps{
+            deleteDir()}}
+        stage('Checkout') {
+            steps {
+               git 'https://github.com/doviethoang/Jenkins.ASP.NET.git'
+            }
+        }
+        stage('Restore packages'){
+   steps{
+      bat 'nuget restore NETCICD/NETCICD.sln'
+     }
+    }
+     stage('Msbuild clean build packages'){
+   steps{
+     bat script:"${msbuild} ${workingspacesln} /t:clean;build;package /p:PackageFileName=${packagename}"
+}
+}
+stage('Deploy to IIS'){
+   steps{
+      bat 'msdeploy -verb:sync -source:package="NETCICD/NETCICD.zip" -dest:auto -setParam:name="IIS Web Application Name",value="Default Web Site/NETCICD"'
+     }
+    }
+     }
+}
