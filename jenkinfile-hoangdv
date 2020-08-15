@@ -15,7 +15,8 @@ environment {
             deleteDir()}}
         stage('Checkout') {
             steps {
-               git 'https://github.com/doviethoang/Jenkins.ASP.NET.git'
+               git branch: 'dev', 
+			   url: 'https://github.com/doviethoang/Jenkins.ASP.NET.git'
             }
         }
         stage('Restore packages'){
